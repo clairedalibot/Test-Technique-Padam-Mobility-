@@ -124,9 +124,11 @@ class Busshift:
             return False
         return True
 
-    # check that there is at least one bus stop
+    # check that there is at least two bus stop
     def busshift_busstops_validation(self):
-        return bool(self.busstops)
+        if (len((self.busstops).split("///")))>=2:
+            return True
+        return False
 
     # do all the checks
     def validation(self):
@@ -137,7 +139,7 @@ if __name__ == '__main__':
     data = get_data("busshift")
     #print(data)
     busshift1 = Busshift('200', 'HX--UC', 7, ['rue Blin', 'avenue de Hebert', 'rue de Bruneau'], datetime.time(9, 0, 0), datetime.time(18, 0, 0))
-    print(busshift1.busshift_driver_validation())
+    print(busshift1.busshift_busstops_validation())
 
 
 
