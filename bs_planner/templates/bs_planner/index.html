@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BusShift Planner</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href = "{%static 'bs_planner/css/style.css' %}">
+</head>
+<body>
+    <div class="navbar">
+        <h1 class="text-white"> BusShift List</h1>
+    </div>
+    <div class="container">
+        <div class="row">
+                {% for busshift in busshifts %}
+                    <div class="col-md-10 col-lg-6">
+                        <div class="card">
+                        <div class="card-body">
+                        <h2 class="card-title"><b>Busshift {{busshift.name}}</b></h2>
+                        <p class="card-text"><p><b>Bus : </b>{{ busshift.bus }}</p>
+                        <p class="card-text"><p><b>Driver : </b>{{ busshift.driver }}</p>
+                        <p class="card-text"><b>Busstops : </b>{{ busshift.busstops }}</p>
+                        <p class="card-text"><b>Start time : </b>{{ busshift.start.time }}</p>
+                        <p class="card-text"><b>End time : </b>{{ busshift.stop.time }}</p>
+                        <form action="{%url 'delete_bs' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="name" name="name" value="{{ busshift.name }}">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                        </div>
+                        </div>
+                    </div>
+                {% endfor %}
+        </div>
+
+        <div class="row mt-3">
+            <div class="col">
+                <form method="POST" action="{% url 'add_bs' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Busshift name</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bus" class="form-label">Bus licence plate</label>
+                        <select id="bus" name="bus">
+                            {% for bus in buses %}
+                                <option value="{{bus.licence_plate}}">{{bus.licence_plate}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="driver" class="form-label">Driver id</label>
+                        <select id="driver" name="driver">
+                            {% for driver in drivers %}
+                                <option value="{{driver.id}}">{{driver.id}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <fieldset>
+                            <legend>Bus stops :</legend>
+                            {% for busstop in busstops %}
+                                <div>
+                                    <input type="checkbox" id='{{busstop.name}}' name="place" value='{{busstop.name}}'>
+                                    <label for='{{busstop.name}}'>{{busstop.name}}</label>
+                                </div>
+                            {% endfor %}
+                        </fieldset>
+                    </div>
+                    <div class="mb-3">
+                        <label for="start" class="form-label">Start time</label>
+                        <input type="time" id="start" name="start" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stop" class="form-label">Stop time</label>
+                        <input type="time" id="stop" name="stop" class="form-control" required>
+                    </div>
+                    <input type="submit" value="Ajouter" class="btn btn-primary mt-3 mb-5">
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
